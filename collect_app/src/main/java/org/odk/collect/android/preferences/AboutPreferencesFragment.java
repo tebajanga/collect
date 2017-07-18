@@ -28,6 +28,7 @@ public class AboutPreferencesFragment extends PreferenceFragment implements Pref
     public static final String KEY_LEAVE_A_REVIEW = "leave_a_review";
     public static final String KEY_ODK_WEBSITE = "info";
     private static final String GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=";
+    //private static final String ODK_WEBSITE = "https://opendatakit.org";
     private static final String ODK_WEBSITE = "https://opendatakit.org";
     private CustomTabHelper mCustomTabHelper;
     private Uri uri;

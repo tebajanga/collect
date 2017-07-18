@@ -24,8 +24,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingBottom="1dp"
-        android:paddingTop="6dp"
-        android:text="@string/app_name"
+        android:paddingTop="16dp"
+        android:text="@string/application_name"
         android:textSize="21sp"
         android:textStyle="bold" />
 
@@ -36,7 +36,8 @@
         android:paddingBottom="10dp"
         android:paddingTop="1dp"
         android:text="@string/main_menu_details"
-        android:textSize="17sp" />
+        android:textSize="17sp"
+        android:visibility="gone"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -66,6 +67,16 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="5dp" />
+
+            <Button
+                    android:id="@+id/completed_forms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:textSize="21sp"
+                    android:text="@string/completed_forms"/>
+
+            <!--
 
             <Button
                 android:id="@+id/review_data"
@@ -107,19 +118,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
-                android:textSize="21sp" />
+                android:textSize="21sp"
+                android:visibility="gone"/>
 
             <View
                 android:id="@+id/get_forms_spacer"
                 android:layout_width="match_parent"
-                android:layout_height="5dp" />
+                android:layout_height="5dp"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/manage_forms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
-                android:textSize="21sp" />
+                android:textSize="21sp"
+                android:visibility="gone"/>
+
+            -->
+
         </LinearLayout>
     </ScrollView>
 

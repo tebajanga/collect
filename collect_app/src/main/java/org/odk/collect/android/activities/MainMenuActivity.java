@@ -78,11 +78,13 @@ public class MainMenuActivity extends Activity {
 
     // menu options
     private static final int MENU_ABOUT = Menu.FIRST;
-    private static final int MENU_PREFERENCES = Menu.FIRST + 1;
-    private static final int MENU_ADMIN = Menu.FIRST + 2;
+    private static final int MENU_GET_BLANK_FORM = Menu.FIRST + 1;
+    private static final int MENU_PREFERENCES = Menu.FIRST + 2;
+    private static final int MENU_ADMIN = Menu.FIRST + 3;
     private static final boolean EXIT = true;
     // buttons
     private Button mEnterDataButton;
+    private Button mCompletedForms;
     private Button mManageFilesButton;
     private Button mSendDataButton;
     private Button mViewSentFormsButton;
@@ -122,6 +124,21 @@ public class MainMenuActivity extends Activity {
             }
         });
 
+        // completed forms button.
+        mCompletedForms = (Button) findViewById(R.id.completed_forms);
+        mCompletedForms.setText(getString(R.string.completed_forms));
+        mCompletedForms.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collect.getInstance().getActivityLogger()
+                        .logAction(this, "completedForm", "click");
+                Intent i = new Intent(getApplicationContext(),
+                        CompletedFormsActivity.class);
+                startActivity(i);
+            }
+        });
+
+        /*
         // review data button. expects a result.
         mReviewDataButton = (Button) findViewById(R.id.review_data);
         mReviewDataButton.setText(getString(R.string.review_data_button));
@@ -136,7 +153,9 @@ public class MainMenuActivity extends Activity {
                 startActivity(i);
             }
         });
+        */
 
+        /*
         // send data button. expects a result.
         mSendDataButton = (Button) findViewById(R.id.send_data);
         mSendDataButton.setText(getString(R.string.send_data_button));
@@ -150,7 +169,9 @@ public class MainMenuActivity extends Activity {
                 startActivity(i);
             }
         });
+        */
 
+        /*
         //View sent forms
         mViewSentFormsButton = (Button) findViewById(R.id.view_sent_forms);
         mViewSentFormsButton.setOnClickListener(new OnClickListener() {
@@ -164,7 +185,9 @@ public class MainMenuActivity extends Activity {
                 startActivity(i);
             }
         });
+        */
 
+        /*
         // manage forms button. no result expected.
         mGetFormsButton = (Button) findViewById(R.id.get_forms);
         mGetFormsButton.setText(getString(R.string.get_forms));
@@ -194,7 +217,9 @@ public class MainMenuActivity extends Activity {
 
             }
         });
+        */
 
+        /*
         // manage forms button. no result expected.
         mManageFilesButton = (Button) findViewById(R.id.manage_forms);
         mManageFilesButton.setText(getString(R.string.manage_files));
@@ -208,6 +233,7 @@ public class MainMenuActivity extends Activity {
                 startActivity(i);
             }
         });
+        */
 
         setTitle(getString(R.string.main_menu));
 
@@ -221,12 +247,14 @@ public class MainMenuActivity extends Activity {
             return;
         }
 
+        /*
         {
             // dynamically construct the "ODK Collect vA.B" string
             TextView mainMenuMessageLabel = (TextView) findViewById(R.id.main_menu_header);
             mainMenuMessageLabel.setText(Collect.getInstance()
                     .getVersionedAppName());
         }
+        */
 
         File f = new File(Collect.ODK_ROOT + "/collect.settings");
         if (f.exists()) {
@@ -239,8 +267,8 @@ public class MainMenuActivity extends Activity {
             }
         }
 
-        mReviewSpacer = findViewById(R.id.review_spacer);
-        mGetFormsSpacer = findViewById(R.id.get_forms_spacer);
+        //mReviewSpacer = findViewById(R.id.review_spacer);
+        //  nmGetFormsSpacer = findViewById(R.id.get_forms_spacer);
 
         mAdminPreferences = this.getSharedPreferences(
                 AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
@@ -288,7 +316,7 @@ public class MainMenuActivity extends Activity {
         }
         mViewSentCount = mViewSentCursor != null ? mViewSentCursor.getCount() : 0;
 
-        updateButtons();
+        //updateButtons();
         setupGoogleAnalytics();
     }
 
@@ -403,6 +431,10 @@ public class MainMenuActivity extends Activity {
 
         menu.add(0, MENU_ABOUT, 0, R.string.about_preferences).setShowAsAction(
                 MenuItem.SHOW_AS_ACTION_NEVER);
+
+        menu.add(0, MENU_GET_BLANK_FORM, 0, R.string.get_forms).setShowAsAction(
+                MenuItem.SHOW_AS_ACTION_NEVER);
+
         menu
                 .add(0, MENU_PREFERENCES, 0, R.string.general_preferences)
                 .setIcon(R.drawable.ic_menu_preferences)
@@ -425,6 +457,29 @@ public class MainMenuActivity extends Activity {
                                 "MENU_ABOUT");
                 Intent aboutIntent = new Intent(this, AboutPreferencesActivity.class);
                 startActivity(aboutIntent);
+                return true;
+
+            case MENU_GET_BLANK_FORM:
+                Collect.getInstance().getActivityLogger()
+                        .logAction(this, "downloadBlankForms", "click");
+                SharedPreferences sharedPreferences = PreferenceManager
+                        .getDefaultSharedPreferences(MainMenuActivity.this);
+                String protocol = sharedPreferences.getString(
+                        PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
+                Intent intent = null;
+                if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
+                    if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
+                        intent = new Intent(getApplicationContext(),
+                                GoogleDriveActivity.class);
+                    } else {
+                        PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
+                        return true;
+                    }
+                } else {
+                    intent = new Intent(getApplicationContext(),
+                            FormDownloadList.class);
+                }
+                startActivity(intent);
                 return true;
             case MENU_PREFERENCES:
                 Collect.getInstance()
@@ -558,6 +613,7 @@ public class MainMenuActivity extends Activity {
         googleAnalytics.setAppOptOut(!isAnalyticsEnabled);
     }
 
+    /*
     private void updateButtons() {
         if (mFinalizedCursor != null && !mFinalizedCursor.isClosed()) {
             mFinalizedCursor.requery();
@@ -604,6 +660,7 @@ public class MainMenuActivity extends Activity {
                             + "Perhaps the app is running in the background?");
         }
     }
+    */
 
     private boolean loadSharedPreferencesFromFile(File src) {
         // this should probably be in a thread if it ever gets big
@@ -687,7 +744,7 @@ public class MainMenuActivity extends Activity {
         public void handleMessage(Message msg) {
             MainMenuActivity target = mTarget.get();
             if (target != null) {
-                target.updateButtons();
+                //target.updateButtons();
             }
         }
     }
